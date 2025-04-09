@@ -1,92 +1,105 @@
-from typing import List, Tuple, Optional
+from typing import List, Tuple
 
 class Solution:
-    def two_sum_brute_force(self, nums: List[int], target: int) -> Optional[Tuple[int, int]]:
+    def two_sum_brute_force(self, nums: List[int], target: int) -> Tuple[int, int]:
         """
-        Brute force solution with O(n²) time complexity.
+        Brute force approach checking all possible pairs.
+        Time Complexity: O(n²)
+        Space Complexity: O(1)
         """
         for i in range(len(nums)):
             for j in range(i + 1, len(nums)):
                 if nums[i] + nums[j] == target:
                     return (i, j)
-        return None
+        return (-1, -1)
 
-    def two_sum_hashmap(self, nums: List[int], target: int) -> Optional[Tuple[int, int]]:
+    def two_sum_hash(self, nums: List[int], target: int) -> Tuple[int, int]:
         """
-        Optimized solution using hashmap with O(n) time complexity.
+        Using hash table to store complements.
+        Time Complexity: O(n)
+        Space Complexity: O(n)
         """
-        num_map = {}
+        num_dict = {}
         for i, num in enumerate(nums):
             complement = target - num
-            if complement in num_map:
-                return (num_map[complement], i)
-            num_map[num] = i
-        return None
+            if complement in num_dict:
+                return (num_dict[complement], i)
+            num_dict[num] = i
+        return (-1, -1)
 
-    def two_sum_two_pointers(self, nums: List[int], target: int) -> Optional[Tuple[int, int]]:
+    def two_sum_sort(self, nums: List[int], target: int) -> Tuple[int, int]:
         """
-        Two pointers solution with O(n log n) time complexity.
-        Note: This solution requires the array to be sorted.
+        Using sorting and two pointers.
+        Time Complexity: O(n log n)
+        Space Complexity: O(n)
         """
-        nums_sorted = sorted(nums)
-        left, right = 0, len(nums) - 1
+        # Create a list of tuples containing value and original index
+        nums_with_index = [(num, i) for i, num in enumerate(nums)]
+        # Sort based on the number value
+        nums_with_index.sort()
         
+        left, right = 0, len(nums) - 1
         while left < right:
-            current_sum = nums_sorted[left] + nums_sorted[right]
+            current_sum = nums_with_index[left][0] + nums_with_index[right][0]
             if current_sum == target:
-                # Find original indices
-                original_left = nums.index(nums_sorted[left])
-                original_right = nums.index(nums_sorted[right])
-                if original_left == original_right:
-                    original_right = nums.index(nums_sorted[right], original_left + 1)
-                return (original_left, original_right)
+                return (nums_with_index[left][1], nums_with_index[right][1])
             elif current_sum < target:
                 left += 1
             else:
                 right -= 1
-        return None
+        return (-1, -1)
 
 def test_solution():
     solution = Solution()
     
     # Test Case 1: Basic case
-    nums1 = [2, 7, 11, 15]
-    target1 = 9
+    nums = [2, 7, 11, 15]
+    target = 9
     print("Test Case 1:")
-    print(f"Input: nums = {nums1}, target = {target1}")
-    print(f"Brute Force: {solution.two_sum_brute_force(nums1, target1)}")
-    print(f"Hashmap: {solution.two_sum_hashmap(nums1, target1)}")
-    print(f"Two Pointers: {solution.two_sum_two_pointers(nums1, target1)}")
+    print(f"Input: nums = {nums}, target = {target}")
+    print(f"Brute Force: {solution.two_sum_brute_force(nums, target)}")
+    print(f"Hash Method: {solution.two_sum_hash(nums, target)}")
+    print(f"Sort Method: {solution.two_sum_sort(nums, target)}")
     print()
     
-    # Test Case 2: Duplicate numbers
-    nums2 = [3, 3]
-    target2 = 6
+    # Test Case 2: Multiple solutions
+    nums = [3, 2, 4]
+    target = 6
     print("Test Case 2:")
-    print(f"Input: nums = {nums2}, target = {target2}")
-    print(f"Brute Force: {solution.two_sum_brute_force(nums2, target2)}")
-    print(f"Hashmap: {solution.two_sum_hashmap(nums2, target2)}")
-    print(f"Two Pointers: {solution.two_sum_two_pointers(nums2, target2)}")
+    print(f"Input: nums = {nums}, target = {target}")
+    print(f"Brute Force: {solution.two_sum_brute_force(nums, target)}")
+    print(f"Hash Method: {solution.two_sum_hash(nums, target)}")
+    print(f"Sort Method: {solution.two_sum_sort(nums, target)}")
     print()
     
-    # Test Case 3: No solution
-    nums3 = [1, 2, 3, 4]
-    target3 = 8
+    # Test Case 3: Negative numbers
+    nums = [-1, -2, -3, -4, -5]
+    target = -8
     print("Test Case 3:")
-    print(f"Input: nums = {nums3}, target = {target3}")
-    print(f"Brute Force: {solution.two_sum_brute_force(nums3, target3)}")
-    print(f"Hashmap: {solution.two_sum_hashmap(nums3, target3)}")
-    print(f"Two Pointers: {solution.two_sum_two_pointers(nums3, target3)}")
+    print(f"Input: nums = {nums}, target = {target}")
+    print(f"Brute Force: {solution.two_sum_brute_force(nums, target)}")
+    print(f"Hash Method: {solution.two_sum_hash(nums, target)}")
+    print(f"Sort Method: {solution.two_sum_sort(nums, target)}")
     print()
     
-    # Test Case 4: Negative numbers
-    nums4 = [-1, -2, -3, -4, -5]
-    target4 = -8
+    # Test Case 4: No solution
+    nums = [1, 2, 3, 4]
+    target = 8
     print("Test Case 4:")
-    print(f"Input: nums = {nums4}, target = {target4}")
-    print(f"Brute Force: {solution.two_sum_brute_force(nums4, target4)}")
-    print(f"Hashmap: {solution.two_sum_hashmap(nums4, target4)}")
-    print(f"Two Pointers: {solution.two_sum_two_pointers(nums4, target4)}")
+    print(f"Input: nums = {nums}, target = {target}")
+    print(f"Brute Force: {solution.two_sum_brute_force(nums, target)}")
+    print(f"Hash Method: {solution.two_sum_hash(nums, target)}")
+    print(f"Sort Method: {solution.two_sum_sort(nums, target)}")
+    print()
+    
+    # Test Case 5: Large array
+    nums = list(range(1000))
+    target = 1997
+    print("Test Case 5:")
+    print(f"Input: nums = [0,1,2,...,999], target = {target}")
+    print(f"Brute Force: {solution.two_sum_brute_force(nums, target)}")
+    print(f"Hash Method: {solution.two_sum_hash(nums, target)}")
+    print(f"Sort Method: {solution.two_sum_sort(nums, target)}")
 
 if __name__ == "__main__":
     test_solution() 

@@ -1,89 +1,80 @@
 # Two Sum
 
 ## Problem Description
-Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`. You may assume that each input would have exactly one solution, and you may not use the same element twice.
+Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.
 
 ## Examples
 1. Basic case:
    ```
-   Input: nums = [2, 7, 11, 15], target = 9
-   Output: (0, 1)
-   Explanation: Because nums[0] + nums[1] == 9, we return (0, 1).
+   Input: nums = [2,7,11,15], target = 9
+   Output: [0,1]
+   Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
    ```
 
-2. Duplicate numbers:
+2. Multiple solutions:
    ```
-   Input: nums = [3, 3], target = 6
-   Output: (0, 1)
-   ```
-
-3. No solution:
-   ```
-   Input: nums = [1, 2, 3, 4], target = 8
-   Output: None
+   Input: nums = [3,2,4], target = 6
+   Output: [1,2]
    ```
 
-4. Negative numbers:
+3. Negative numbers:
    ```
-   Input: nums = [-1, -2, -3, -4, -5], target = -8
-   Output: (2, 4)
+   Input: nums = [-1,-2,-3,-4,-5], target = -8
+   Output: [2,4]
    ```
 
 ## Solution Approaches
 
 ### 1. Brute Force (O(n²))
-- Iterate through each element in the array
-- For each element, iterate through the remaining elements
-- Check if the sum equals the target
-- Return the indices if found
+- Check all possible pairs of numbers
+- Time Complexity: O(n²)
+- Space Complexity: O(1)
+- Best for small arrays or understanding the problem
 
-### 2. Hashmap (O(n))
-- Create a hashmap to store numbers and their indices
-- For each number, calculate its complement (target - number)
-- Check if the complement exists in the hashmap
-- If found, return the indices
-- Otherwise, add the current number to the hashmap
+### 2. Hash Table (O(n))
+- Use a hash table to store complements
+- For each number, check if its complement exists
+- Time Complexity: O(n)
+- Space Complexity: O(n)
+- Best for most practical cases
 
-### 3. Two Pointers (O(n log n))
-- Sort the array
-- Use two pointers (left and right)
-- Move pointers based on the sum compared to target
-- Find original indices after finding the solution
+### 3. Sort and Two Pointers (O(n log n))
+- Sort the array and use two pointers
+- Move pointers based on sum comparison
+- Time Complexity: O(n log n)
+- Space Complexity: O(n)
+- Best when array is already sorted
 
 ## Time Complexity
 - Brute Force: O(n²)
-- Hashmap: O(n)
-- Two Pointers: O(n log n)
+- Hash Table: O(n)
+- Sort and Two Pointers: O(n log n)
 
 ## Space Complexity
 - Brute Force: O(1)
-- Hashmap: O(n)
-- Two Pointers: O(n) for sorting
+- Hash Table: O(n)
+- Sort and Two Pointers: O(n)
 
 ## Usage
 ```python
 from two_sum import Solution
 
 solution = Solution()
-nums = [2, 7, 11, 15]
-target = 9
 
 # Using brute force
-result = solution.two_sum_brute_force(nums, target)
-print(result)  # Output: (0, 1)
+print(solution.two_sum_brute_force([2,7,11,15], 9))  # Output: (0, 1)
 
-# Using hashmap (recommended)
-result = solution.two_sum_hashmap(nums, target)
-print(result)  # Output: (0, 1)
+# Using hash table
+print(solution.two_sum_hash([2,7,11,15], 9))  # Output: (0, 1)
 
-# Using two pointers
-result = solution.two_sum_two_pointers(nums, target)
-print(result)  # Output: (0, 1)
+# Using sort and two pointers
+print(solution.two_sum_sort([2,7,11,15], 9))  # Output: (0, 1)
 ```
 
 ## Common Applications
-- Finding pairs in arrays
-- Data validation
+- Finding pairs in data analysis
 - Financial calculations
-- Game development
-- Cryptography 
+- Resource allocation
+- Scheduling problems
+- Network routing
+- Database queries 
