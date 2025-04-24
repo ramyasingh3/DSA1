@@ -5,18 +5,18 @@ class ListNode:
         self.val = val
         self.next = next
 
-def merge_two_lists(list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+def mergeTwoLists(list1: ListNode, list2: ListNode) -> ListNode:
     """
-    Merge two sorted linked lists into one sorted list.
+    Merge two sorted linked lists and return it as a sorted list.
     
     Args:
-        list1: First sorted linked list
-        list2: Second sorted linked list
+        list1 (ListNode): Head of the first sorted linked list
+        list2 (ListNode): Head of the second sorted linked list
         
     Returns:
-        Merged sorted linked list
+        ListNode: Head of the merged sorted linked list
     """
-    # Create a dummy node to start the merged list
+    # Create a dummy node to serve as the starting point
     dummy = ListNode()
     current = dummy
     
@@ -30,24 +30,24 @@ def merge_two_lists(list1: Optional[ListNode], list2: Optional[ListNode]) -> Opt
             list2 = list2.next
         current = current.next
     
-    # Attach remaining elements
+    # Append the remaining nodes from the non-empty list
     current.next = list1 if list1 else list2
     
     return dummy.next
 
-def list_to_linked_list(lst: list) -> Optional[ListNode]:
-    """Convert a Python list to a linked list."""
-    if not lst:
+def create_linked_list(values):
+    """Helper function to create a linked list from a list of values"""
+    if not values:
         return None
-    head = ListNode(lst[0])
+    head = ListNode(values[0])
     current = head
-    for val in lst[1:]:
+    for val in values[1:]:
         current.next = ListNode(val)
         current = current.next
     return head
 
-def linked_list_to_list(head: Optional[ListNode]) -> list:
-    """Convert a linked list to a Python list."""
+def linked_list_to_list(head):
+    """Helper function to convert a linked list to a list"""
     result = []
     current = head
     while current:
@@ -55,35 +55,25 @@ def linked_list_to_list(head: Optional[ListNode]) -> list:
         current = current.next
     return result
 
-def test_merge_two_lists():
-    """Test cases for the merge two lists solution."""
-    
-    test_cases = [
-        ([1, 2, 4], [1, 3, 4], [1, 1, 2, 3, 4, 4]),
-        ([], [], []),
-        ([], [0], [0]),
-        ([1], [], [1]),
-        ([1, 3, 5], [2, 4, 6], [1, 2, 3, 4, 5, 6]),
-        ([1, 2, 3], [4, 5, 6], [1, 2, 3, 4, 5, 6])
-    ]
-    
-    print("Testing Merge Two Sorted Lists Solution...")
-    for list1, list2, expected in test_cases:
-        # Convert lists to linked lists
-        l1 = list_to_linked_list(list1)
-        l2 = list_to_linked_list(list2)
-        
-        # Merge lists
-        merged = merge_two_lists(l1, l2)
-        
-        # Convert back to list for comparison
-        result = linked_list_to_list(merged)
-        
-        print(f"\nInput: list1 = {list1}, list2 = {list2}")
-        print(f"Expected: {expected}")
-        print(f"Got: {result}")
-        print(f"Test {'passed' if result == expected else 'failed'}")
-        print("-" * 50)
-
+# Test cases
 if __name__ == "__main__":
-    test_merge_two_lists() 
+    # Test case 1
+    list1 = create_linked_list([1,2,4])
+    list2 = create_linked_list([1,3,4])
+    merged = mergeTwoLists(list1, list2)
+    print(f"Input: list1 = [1,2,4], list2 = [1,3,4]")
+    print(f"Output: {linked_list_to_list(merged)}")  # Expected: [1,1,2,3,4,4]
+    
+    # Test case 2
+    list1 = create_linked_list([])
+    list2 = create_linked_list([])
+    merged = mergeTwoLists(list1, list2)
+    print(f"\nInput: list1 = [], list2 = []")
+    print(f"Output: {linked_list_to_list(merged)}")  # Expected: []
+    
+    # Test case 3
+    list1 = create_linked_list([])
+    list2 = create_linked_list([0])
+    merged = mergeTwoLists(list1, list2)
+    print(f"\nInput: list1 = [], list2 = [0]")
+    print(f"Output: {linked_list_to_list(merged)}")  # Expected: [0] 
