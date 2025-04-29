@@ -9,6 +9,9 @@ def longest_common_subsequence(text1: str, text2: str) -> int:
     Returns:
         int: Length of the longest common subsequence
     """
+    if not text1 or not text2:
+        return 0
+        
     m, n = len(text1), len(text2)
     dp = [[0] * (n + 1) for _ in range(m + 1)]
     
@@ -24,10 +27,11 @@ def longest_common_subsequence(text1: str, text2: str) -> int:
 def main():
     # Test cases
     test_cases = [
-        ("abcde", "ace"),  # Expected: 3 (ace)
-        ("abc", "abc"),    # Expected: 3 (abc)
+        ("abcde", "ace"),  # Expected: 3 (subsequence: "ace")
+        ("abc", "abc"),    # Expected: 3 (subsequence: "abc")
         ("abc", "def"),    # Expected: 0 (no common subsequence)
-        ("", ""),          # Expected: 0 (empty strings)
+        ("", ""),          # Expected: 0
+        ("abcde", "ace"),  # Expected: 3 (subsequence: "ace")
     ]
     
     for text1, text2 in test_cases:

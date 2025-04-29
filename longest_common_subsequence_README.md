@@ -39,11 +39,11 @@ The solution uses dynamic programming to solve this problem efficiently:
    - If text1[i-1] == text2[j-1], then dp[i][j] = dp[i-1][j-1] + 1
    - Otherwise, dp[i][j] = max(dp[i-1][j], dp[i][j-1])
 
-3. The final answer will be in dp[m][n], where m and n are the lengths of text1 and text2 respectively.
+3. Return dp[m][n] as the result
 
 ## Time and Space Complexity
 - Time Complexity: O(m*n), where m and n are the lengths of the input strings
 - Space Complexity: O(m*n) for the DP table
 
 ## Implementation
-The solution is implemented in Python using a 2D array for the DP table. The code includes test cases to verify the implementation. 
+The solution is implemented in Python using dynamic programming. The code includes test cases to verify the implementation. 
