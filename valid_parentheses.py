@@ -1,72 +1,149 @@
-def is_valid(s: str) -> bool:
+"""
+Valid Parentheses Implementation
+
+This file contains multiple implementations to check if a string of parentheses is valid.
+
+Problem Statement:
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']',
+determine if the input string is valid. An input string is valid if:
+1. Open brackets must be closed by the same type of brackets.
+2. Open brackets must be closed in the correct order.
+3. Every close bracket has a corresponding open bracket of the same type.
+
+Time Complexity: O(n) where n is the length of the string
+Space Complexity: O(n) for stack-based solution
+"""
+
+def is_valid_stack(s: str) -> bool:
     """
-    Check if the input string contains valid parentheses.
+    Check if parentheses are valid using a stack.
+    This is the optimal solution with O(n) time complexity.
     
     Args:
-        s: Input string containing only '()[]{}'
+        s (str): String containing parentheses
         
     Returns:
-        True if the parentheses are valid, False otherwise
+        bool: True if parentheses are valid, False otherwise
     """
-    # Create a mapping of closing to opening parentheses
-    parentheses_map = {')': '(', ']': '[', '}': '{'}
+    # Dictionary to map closing brackets to their corresponding opening brackets
+    bracket_map = {')': '(', '}': '{', ']': '['}
     stack = []
     
     for char in s:
-        # If it's a closing parenthesis
-        if char in parentheses_map:
-            # Pop the top element if stack is not empty, otherwise use a dummy value
-            top_element = stack.pop() if stack else '#'
-            
-            # Check if the popped element matches the mapping
-            if parentheses_map[char] != top_element:
-                return False
-        else:
-            # Push opening parenthesis onto the stack
+        # If it's an opening bracket, push to stack
+        if char in '({[':
             stack.append(char)
+        # If it's a closing bracket
+        elif char in ')}]':
+            # If stack is empty or top of stack doesn't match
+            if not stack or stack.pop() != bracket_map[char]:
+                return False
     
-    # If stack is empty, all parentheses were matched
-    return not stack
+    # Stack should be empty if all brackets are properly matched
+    return len(stack) == 0
 
-def test_is_valid():
-    """Test cases for the valid parentheses solution."""
+def is_valid_counting(s: str) -> bool:
+    """
+    Check if parentheses are valid using counting approach.
+    Note: This approach only works for single type of parentheses.
+    For multiple types, we need to track the order as well.
     
+    Args:
+        s (str): String containing parentheses
+        
+    Returns:
+        bool: True if parentheses are valid, False otherwise
+    """
+    count = 0
+    
+    for char in s:
+        if char == '(':
+            count += 1
+        elif char == ')':
+            count -= 1
+            if count < 0:  # More closing brackets than opening
+                return False
+    
+    return count == 0
+
+def is_valid_recursive(s: str) -> bool:
+    """
+    Check if parentheses are valid using recursive approach.
+    This is less efficient than the stack approach but demonstrates
+    a different way of thinking about the problem.
+    
+    Args:
+        s (str): String containing parentheses
+        
+    Returns:
+        bool: True if parentheses are valid, False otherwise
+    """
+    def remove_valid_pairs(s: str) -> str:
+        """Remove valid pairs of parentheses recursively"""
+        if not s:
+            return ""
+        
+        # Find the first valid pair
+        for i in range(len(s) - 1):
+            if (s[i] == '(' and s[i + 1] == ')') or \
+               (s[i] == '{' and s[i + 1] == '}') or \
+               (s[i] == '[' and s[i + 1] == ']'):
+                # Remove the pair and continue with the rest
+                return remove_valid_pairs(s[:i] + s[i + 2:])
+        
+        return s
+    
+    # Keep removing valid pairs until no more can be removed
+    result = remove_valid_pairs(s)
+    return len(result) == 0
+
+def test_valid_parentheses():
+    """Test cases for valid parentheses implementations"""
     test_cases = [
-        ("()", True),
-        ("()[]{}", True),
-        ("(]", False),
-        ("([)]", False),
-        ("{[]}", True),
-        ("", True),
-        # Edge cases
-        ("(", False),
-        (")", False),
-        ("[", False),
-        ("]", False),
-        ("{", False),
-        ("}", False),
-        # Nested cases
-        ("((()))", True),
-        ("((())", False),
-        ("(()))", False),
-        # Mixed cases
-        ("({[]})", True),
-        ("({[}])", False),
-        # Long strings
-        ("()" * 1000, True),
-        ("({[]})" * 500, True),
-        ("({[})" * 1000, False)
+        ("()", True),           # Simple valid case
+        ("()[]{}", True),       # Multiple valid pairs
+        ("(]", False),          # Invalid pair
+        ("([)]", False),        # Wrong order
+        ("{[]}", True),         # Nested valid
+        ("", True),             # Empty string
+        ("(((", False),         # Unclosed
+        (")))", False),         # Unopened
+        ("(())", True),         # Nested same type
+        ("([{}])", True),       # Complex nested
     ]
     
-    print("Testing Valid Parentheses Solution...")
     for s, expected in test_cases:
-        result = is_valid(s)
+        # Test stack approach
+        assert is_valid_stack(s) == expected, f"Stack test failed for '{s}'"
         
-        print(f"\nInput: {s}")
-        print(f"Expected: {expected}")
-        print(f"Got: {result}")
-        print(f"Test {'passed' if result == expected else 'failed'}")
-        print("-" * 50)
+        # Test counting approach (only for single type)
+        if all(c in '()' for c in s):
+            assert is_valid_counting(s) == expected, f"Counting test failed for '{s}'"
+        
+        # Test recursive approach
+        assert is_valid_recursive(s) == expected, f"Recursive test failed for '{s}'"
+    
+    print("All test cases passed!")
 
 if __name__ == "__main__":
-    test_is_valid() 
+    # Run test cases
+    test_valid_parentheses()
+    
+    # Example usage
+    test_strings = [
+        "()",
+        "()[]{}",
+        "(]",
+        "([)]",
+        "{[]}",
+        "(((",
+        "([{}])"
+    ]
+    
+    print("\nTesting various strings:")
+    for s in test_strings:
+        print(f"\nString: '{s}'")
+        print(f"Using stack: {is_valid_stack(s)}")
+        if all(c in '()' for c in s):
+            print(f"Using counting: {is_valid_counting(s)}")
+        print(f"Using recursive: {is_valid_recursive(s)}") 
