@@ -12,6 +12,37 @@ Time Complexity: O(n) for optimal solution using hash map
 Space Complexity: O(n) for hash map approach
 """
 
+def two_sum(nums: list[int], target: int) -> list[int]:
+    """
+    Given an array of integers nums and an integer target, return indices of the two numbers
+    such that they add up to target.
+    
+    Args:
+        nums (list[int]): List of integers
+        target (int): Target sum
+        
+    Returns:
+        list[int]: List containing the indices of two numbers that add up to target
+        
+    Raises:
+        ValueError: If no solution exists
+    """
+    # Dictionary to store number -> index mapping
+    num_map = {}
+    
+    for i, num in enumerate(nums):
+        complement = target - num
+        
+        # If complement exists in map, we found our pair
+        if complement in num_map:
+            return [num_map[complement], i]
+        
+        # Store current number and its index
+        num_map[num] = i
+    
+    # If we get here, no solution exists
+    raise ValueError("No two numbers in the array sum up to the target")
+
 def two_sum_brute_force(nums: list[int], target: int) -> list[int]:
     """
     Find two numbers that add up to target using brute force approach.
@@ -28,28 +59,6 @@ def two_sum_brute_force(nums: list[int], target: int) -> list[int]:
         for j in range(i + 1, n):
             if nums[i] + nums[j] == target:
                 return [i, j]
-    return []
-
-def two_sum_hashmap(nums: list[int], target: int) -> list[int]:
-    """
-    Find two numbers that add up to target using hash map approach.
-    This is the optimal solution with O(n) time complexity.
-    
-    Args:
-        nums (list[int]): List of integers
-        target (int): Target sum
-        
-    Returns:
-        list[int]: Indices of the two numbers that add up to target
-    """
-    num_map = {}  # value -> index
-    
-    for i, num in enumerate(nums):
-        complement = target - num
-        if complement in num_map:
-            return [num_map[complement], i]
-        num_map[num] = i
-    
     return []
 
 def two_sum_two_pointers(nums: list[int], target: int) -> list[int]:
@@ -99,7 +108,7 @@ def test_two_sum():
         assert sorted(result_bf) == sorted(expected), f"Brute force test failed for {nums} with target {target}"
         
         # Test hashmap approach
-        result_hm = two_sum_hashmap(nums, target)
+        result_hm = two_sum(nums, target)
         assert sorted(result_hm) == sorted(expected), f"Hashmap test failed for {nums} with target {target}"
         
         # Test two pointers approach
@@ -113,17 +122,20 @@ if __name__ == "__main__":
     test_two_sum()
     
     # Example usage
-    test_arrays = [
-        ([2, 7, 11, 15], 9),
-        ([3, 2, 4], 6),
-        ([3, 3], 6),
-        ([1, 2, 3, 4, 5], 9),
-        ([-1, -2, -3, -4], -7)
+    test_cases = [
+        ([2, 7, 11, 15], 9),      # Expected: [0, 1]
+        ([3, 2, 4], 6),           # Expected: [1, 2]
+        ([3, 3], 6),              # Expected: [0, 1]
+        ([1, 5, 3, 7, 9], 12),    # Expected: [1, 3]
+        ([-1, -2, -3, -4], -7),   # Expected: [2, 3]
     ]
     
-    print("\nTesting various arrays:")
-    for nums, target in test_arrays:
-        print(f"\nArray: {nums}, Target: {target}")
-        print(f"Using brute force: {two_sum_brute_force(nums, target)}")
-        print(f"Using hashmap: {two_sum_hashmap(nums, target)}")
-        print(f"Using two pointers: {two_sum_two_pointers(nums, target)}") 
+    for nums, target in test_cases:
+        try:
+            result = two_sum(nums, target)
+            print(f"Input: nums = {nums}, target = {target}")
+            print(f"Output: {result}")
+            print(f"Explanation: nums[{result[0]}] + nums[{result[1]}] = {nums[result[0]]} + {nums[result[1]]} = {target}\n")
+        except ValueError as e:
+            print(f"Input: nums = {nums}, target = {target}")
+            print(f"Error: {str(e)}\n") 

@@ -3,25 +3,58 @@
 ## Problem Description
 Given an array of integers `nums` and an integer `target`, return indices of the two numbers such that they add up to `target`.
 
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
 ## Examples
-1. Basic case:
-   ```
-   Input: nums = [2,7,11,15], target = 9
-   Output: [0,1]
-   Explanation: Because nums[0] + nums[1] == 9, we return [0, 1].
-   ```
+```
+Input: nums = [2, 7, 11, 15], target = 9
+Output: [0, 1]
+Explanation: Because nums[0] + nums[1] == 9, we return [0, 1]
 
-2. Multiple solutions:
-   ```
-   Input: nums = [3,2,4], target = 6
-   Output: [1,2]
-   ```
+Input: nums = [3, 2, 4], target = 6
+Output: [1, 2]
+Explanation: Because nums[1] + nums[2] == 6, we return [1, 2]
 
-3. Negative numbers:
-   ```
-   Input: nums = [-1,-2,-3,-4,-5], target = -8
-   Output: [2,4]
-   ```
+Input: nums = [3, 3], target = 6
+Output: [0, 1]
+Explanation: Because nums[0] + nums[1] == 6, we return [0, 1]
+```
+
+## Solution Approach
+The solution uses a hash map (dictionary) to achieve O(n) time complexity. Here's how it works:
+
+1. Create a hash map to store number -> index mapping
+2. For each number in the array:
+   - Calculate the complement (target - current number)
+   - If complement exists in the hash map:
+     - Return the indices of complement and current number
+   - Otherwise:
+     - Store current number and its index in the hash map
+3. If no solution is found, raise a ValueError
+
+## Time and Space Complexity
+- Time Complexity: O(n), where n is the length of the input array
+  - We process each element exactly once
+- Space Complexity: O(n), where n is the length of the input array
+  - In the worst case, we store all elements in the hash map
+
+## Alternative Approaches
+1. Brute Force (O(n²) time, O(1) space):
+   - Use two nested loops to check all possible pairs
+   - Simple but inefficient for large arrays
+
+2. Two Pointers (O(n log n) time, O(1) space):
+   - Sort the array first
+   - Use two pointers from start and end
+   - Move pointers based on sum comparison
+   - Note: This approach requires additional space to store original indices
+
+## Implementation
+The solution is implemented in `two_sum.py` with:
+- Type hints for better code clarity
+- Comprehensive error handling
+- Detailed test cases
+- Clear documentation
 
 ## Solution Approaches
 
