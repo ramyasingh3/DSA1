@@ -14,21 +14,23 @@ Time Complexity: O(n) where n is the length of the string
 Space Complexity: O(n) for stack-based solution
 """
 
-def is_valid_stack(s: str) -> bool:
+def is_valid_parentheses(s):
     """
-    Check if parentheses are valid using a stack.
-    This is the optimal solution with O(n) time complexity.
+    Check if the input string has valid parentheses.
+    Time Complexity: O(n)
+    Space Complexity: O(n)
+    """
+    # Dictionary to store matching pairs
+    brackets = {
+        ')': '(',
+        '}': '{',
+        ']': '['
+    }
     
-    Args:
-        s (str): String containing parentheses
-        
-    Returns:
-        bool: True if parentheses are valid, False otherwise
-    """
-    # Dictionary to map closing brackets to their corresponding opening brackets
-    bracket_map = {')': '(', '}': '{', ']': '['}
+    # Stack to keep track of opening brackets
     stack = []
     
+    # Iterate through each character in the string
     for char in s:
         # If it's an opening bracket, push to stack
         if char in '({[':
@@ -36,10 +38,10 @@ def is_valid_stack(s: str) -> bool:
         # If it's a closing bracket
         elif char in ')}]':
             # If stack is empty or top of stack doesn't match
-            if not stack or stack.pop() != bracket_map[char]:
+            if not stack or stack.pop() != brackets[char]:
                 return False
     
-    # Stack should be empty if all brackets are properly matched
+    # Stack should be empty if all brackets are matched
     return len(stack) == 0
 
 def is_valid_counting(s: str) -> bool:
@@ -114,7 +116,7 @@ def test_valid_parentheses():
     
     for s, expected in test_cases:
         # Test stack approach
-        assert is_valid_stack(s) == expected, f"Stack test failed for '{s}'"
+        assert is_valid_parentheses(s) == expected, f"Stack test failed for '{s}'"
         
         # Test counting approach (only for single type)
         if all(c in '()' for c in s):
@@ -125,25 +127,30 @@ def test_valid_parentheses():
     
     print("All test cases passed!")
 
+def main():
+    # Test cases
+    test_cases = [
+        "()",           # Expected: True
+        "()[]{}",      # Expected: True
+        "(]",          # Expected: False
+        "([)]",        # Expected: False
+        "{[]}",        # Expected: True
+        "",            # Expected: True
+        "(((",         # Expected: False
+        ")))",         # Expected: False
+        "({[]})",      # Expected: True
+        "({[}])",      # Expected: False
+    ]
+    
+    for s in test_cases:
+        result = is_valid_parentheses(s)
+        print(f"Input: {s}")
+        print(f"Output: {result}")
+        print(f"Explanation: The string '{s}' is {'valid' if result else 'invalid'}\n")
+
 if __name__ == "__main__":
     # Run test cases
     test_valid_parentheses()
     
     # Example usage
-    test_strings = [
-        "()",
-        "()[]{}",
-        "(]",
-        "([)]",
-        "{[]}",
-        "(((",
-        "([{}])"
-    ]
-    
-    print("\nTesting various strings:")
-    for s in test_strings:
-        print(f"\nString: '{s}'")
-        print(f"Using stack: {is_valid_stack(s)}")
-        if all(c in '()' for c in s):
-            print(f"Using counting: {is_valid_counting(s)}")
-        print(f"Using recursive: {is_valid_recursive(s)}") 
+    main() 
