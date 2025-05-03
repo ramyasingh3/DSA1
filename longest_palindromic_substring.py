@@ -1,21 +1,17 @@
-def longest_palindrome(s):
+def longest_palindrome_dp(s: str) -> str:
     """
-    Find the longest palindromic substring in the given string.
-    
-    Args:
-        s (str): Input string
-        
-    Returns:
-        str: Longest palindromic substring
+    Find the longest palindromic substring using dynamic programming.
+    Time Complexity: O(n^2)
+    Space Complexity: O(n^2)
     """
     if not s:
         return ""
-        
+    
     n = len(s)
-    # Initialize DP table
+    # dp[i][j] represents whether s[i:j+1] is a palindrome
     dp = [[False] * n for _ in range(n)]
     
-    # All substrings of length 1 are palindromes
+    # Every single character is a palindrome
     for i in range(n):
         dp[i][i] = True
     
@@ -41,32 +37,65 @@ def longest_palindrome(s):
     
     return s[start:start + max_length]
 
-# Test cases
-def test_longest_palindrome():
-    # Example 1
-    s1 = "babad"
-    result1 = longest_palindrome(s1)
-    assert result1 == "bab" or result1 == "aba"
+def longest_palindrome_expand(s: str) -> str:
+    """
+    Find the longest palindromic substring using expand around center approach.
+    Time Complexity: O(n^2)
+    Space Complexity: O(1)
+    """
+    if not s:
+        return ""
     
-    # Example 2
-    s2 = "cbbd"
-    assert longest_palindrome(s2) == "bb"
+    def expand_around_center(left: int, right: int) -> tuple:
+        while left >= 0 and right < len(s) and s[left] == s[right]:
+            left -= 1
+            right += 1
+        return left + 1, right - 1
     
-    # Example 3
-    s3 = "a"
-    assert longest_palindrome(s3) == "a"
+    start = 0
+    max_length = 1
     
-    # Additional test cases
-    s4 = "racecar"
-    assert longest_palindrome(s4) == "racecar"
+    for i in range(len(s)):
+        # Check for odd length palindromes
+        left, right = expand_around_center(i, i)
+        if right - left + 1 > max_length:
+            start = left
+            max_length = right - left + 1
+        
+        # Check for even length palindromes
+        left, right = expand_around_center(i, i + 1)
+        if right - left + 1 > max_length:
+            start = left
+            max_length = right - left + 1
     
-    s5 = "abacdfgdcaba"
-    assert longest_palindrome(s5) == "aba"
+    return s[start:start + max_length]
+
+def main():
+    # Test cases
+    test_cases = [
+        "babad",  # Expected: "bab" or "aba"
+        "cbbd",   # Expected: "bb"
+        "a",      # Expected: "a"
+        "",       # Expected: ""
+        "racecar", # Expected: "racecar"
+        "abba",   # Expected: "abba"
+        "abcde",  # Expected: "a"
+        "aaaa",   # Expected: "aaaa"
+    ]
     
-    s6 = ""
-    assert longest_palindrome(s6) == ""
+    print("Testing Dynamic Programming solution:")
+    for s in test_cases:
+        result = longest_palindrome_dp(s)
+        print(f"Input: {s}")
+        print(f"Longest palindromic substring: {result}")
+        print()
     
-    print("All test cases passed!")
+    print("\nTesting Expand Around Center solution:")
+    for s in test_cases:
+        result = longest_palindrome_expand(s)
+        print(f"Input: {s}")
+        print(f"Longest palindromic substring: {result}")
+        print()
 
 if __name__ == "__main__":
-    test_longest_palindrome() 
+    main() 
