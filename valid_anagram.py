@@ -12,86 +12,73 @@ Time Complexity: O(n) where n is the length of the strings
 Space Complexity: O(1) for the optimal solution (using character count array)
 """
 
-def is_anagram_sorting(s: str, t: str) -> bool:
+def is_anagram_sort(s: str, t: str) -> bool:
     """
     Check if two strings are anagrams using sorting.
-    
-    Args:
-        s (str): First string
-        t (str): Second string
-        
-    Returns:
-        bool: True if strings are anagrams, False otherwise
+    Time Complexity: O(n log n)
+    Space Complexity: O(n)
     """
-    # If lengths are different, they can't be anagrams
-    if len(s) != len(t):
-        return False
-    
-    # Sort both strings and compare
     return sorted(s) == sorted(t)
 
 def is_anagram_hashmap(s: str, t: str) -> bool:
     """
-    Check if two strings are anagrams using a hash map.
-    
-    Args:
-        s (str): First string
-        t (str): Second string
-        
-    Returns:
-        bool: True if strings are anagrams, False otherwise
+    Check if two strings are anagrams using a hashmap.
+    Time Complexity: O(n)
+    Space Complexity: O(1) since we only use a fixed-size array
     """
-    # If lengths are different, they can't be anagrams
     if len(s) != len(t):
         return False
     
-    # Create a dictionary to store character counts
-    char_count = {}
+    # Create a fixed-size array to count character frequencies
+    char_count = [0] * 26
     
-    # Count characters in first string
+    # Count characters in s
     for char in s:
-        char_count[char] = char_count.get(char, 0) + 1
+        char_count[ord(char) - ord('a')] += 1
     
-    # Decrement counts for characters in second string
+    # Decrement counts for characters in t
     for char in t:
-        if char not in char_count:
-            return False
-        char_count[char] -= 1
-        if char_count[char] < 0:
+        char_count[ord(char) - ord('a')] -= 1
+        # If count becomes negative, t has more of this character
+        if char_count[ord(char) - ord('a')] < 0:
             return False
     
     return True
 
-def is_anagram_array(s: str, t: str) -> bool:
+def is_anagram_counter(s: str, t: str) -> bool:
     """
-    Check if two strings are anagrams using a character count array.
-    This is the most efficient solution for lowercase English letters.
-    
-    Args:
-        s (str): First string
-        t (str): Second string
-        
-    Returns:
-        bool: True if strings are anagrams, False otherwise
+    Check if two strings are anagrams using Counter.
+    Time Complexity: O(n)
+    Space Complexity: O(1) since we only use a fixed-size counter
     """
-    # If lengths are different, they can't be anagrams
+    from collections import Counter
+    return Counter(s) == Counter(t)
+
+def is_anagram_unicode(s: str, t: str) -> bool:
+    """
+    Check if two strings are anagrams using a dictionary for Unicode characters.
+    Time Complexity: O(n)
+    Space Complexity: O(k) where k is the number of unique characters
+    """
     if len(s) != len(t):
         return False
     
-    # Create a fixed-size array for character counts (assuming ASCII)
-    char_count = [0] * 128
+    # Create a dictionary to count character frequencies
+    char_count = {}
     
-    # Count characters in first string
+    # Count characters in s
     for char in s:
-        char_count[ord(char)] += 1
+        char_count[char] = char_count.get(char, 0) + 1
     
-    # Decrement counts for characters in second string
+    # Decrement counts for characters in t
     for char in t:
-        char_count[ord(char)] -= 1
-        if char_count[ord(char)] < 0:
+        if char not in char_count:
             return False
+        char_count[char] -= 1
+        if char_count[char] == 0:
+            del char_count[char]
     
-    return True
+    return len(char_count) == 0
 
 def test_valid_anagram():
     """Test cases for valid anagram implementations"""
@@ -109,13 +96,16 @@ def test_valid_anagram():
     
     for s, t, expected in test_cases:
         # Test sorting approach
-        assert is_anagram_sorting(s, t) == expected, f"Sorting test failed for '{s}' and '{t}'"
+        assert is_anagram_sort(s, t) == expected, f"Sorting test failed for '{s}' and '{t}'"
         
         # Test hashmap approach
         assert is_anagram_hashmap(s, t) == expected, f"Hashmap test failed for '{s}' and '{t}'"
         
-        # Test array approach
-        assert is_anagram_array(s, t) == expected, f"Array test failed for '{s}' and '{t}'"
+        # Test counter approach
+        assert is_anagram_counter(s, t) == expected, f"Counter test failed for '{s}' and '{t}'"
+        
+        # Test unicode approach
+        assert is_anagram_unicode(s, t) == expected, f"Unicode test failed for '{s}' and '{t}'"
     
     print("All test cases passed!")
 
@@ -135,6 +125,7 @@ if __name__ == "__main__":
     print("\nTesting various string pairs:")
     for s, t in test_strings:
         print(f"\nStrings: '{s}' and '{t}'")
-        print(f"Using sorting: {is_anagram_sorting(s, t)}")
+        print(f"Using sorting: {is_anagram_sort(s, t)}")
         print(f"Using hashmap: {is_anagram_hashmap(s, t)}")
-        print(f"Using array: {is_anagram_array(s, t)}") 
+        print(f"Using counter: {is_anagram_counter(s, t)}")
+        print(f"Using unicode: {is_anagram_unicode(s, t)}") 
