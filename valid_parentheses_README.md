@@ -1,101 +1,139 @@
 # Valid Parentheses
 
 ## Problem Description
-Given a string `s` containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid. An input string is valid if:
-1. Open brackets must be closed by the same type of brackets
-2. Open brackets must be closed in the correct order
-3. Every close bracket has a corresponding open bracket of the same type
+Given a string `s` containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+1. Open brackets must be closed by the same type of brackets.
+2. Open brackets must be closed in the correct order.
+3. Every close bracket has a corresponding open bracket of the same type.
 
 ## Examples
 ```
 Input: s = "()"
 Output: true
-Explanation: The string contains a valid pair of parentheses.
 
 Input: s = "()[]{}"
 Output: true
-Explanation: The string contains valid pairs of all three types of brackets.
 
 Input: s = "(]"
 Output: false
-Explanation: The string contains an invalid pair of brackets.
 
 Input: s = "([)]"
 Output: false
-Explanation: The brackets are not closed in the correct order.
+
+Input: s = "{[]}"
+Output: true
 ```
 
 ## Constraints
 - 1 <= s.length <= 10^4
 - s consists of parentheses only '()[]{}'
 
-## Approach
-1. Use a stack to keep track of opening brackets
-2. When we encounter an opening bracket, push it onto the stack
-3. When we encounter a closing bracket:
-   - If the stack is empty, return false (no matching opening bracket)
-   - If the top of stack doesn't match the closing bracket, return false
-   - If it matches, pop the opening bracket from the stack
-4. At the end, the stack should be empty (all brackets matched)
+## Approach 1: Stack-based Solution
+1. Initialize an empty stack
+2. For each character in the string:
+   - If it's an opening bracket, push it onto the stack
+   - If it's a closing bracket:
+     - If stack is empty, return false
+     - If top of stack doesn't match the closing bracket, return false
+     - Pop the top of stack
+3. Return true if stack is empty, false otherwise
+
+## Approach 2: Counting Solution
+1. Initialize a counter to 0
+2. For each character in the string:
+   - If it's an opening bracket, increment counter
+   - If it's a closing bracket, decrement counter
+   - If counter becomes negative, return false
+3. Return true if counter is 0, false otherwise
+Note: This approach only works for single type of brackets
+
+## Approach 3: Regex Solution
+1. Define a pattern matching valid pairs of brackets
+2. Repeatedly remove valid pairs from the string
+3. Return true if string becomes empty, false otherwise
+Note: This approach is not recommended for production use
 
 ## Time and Space Complexity
+### Approach 1 (Stack)
 - Time Complexity: O(n)
+  - We process each character once
 - Space Complexity: O(n)
+  - We need to store the stack
 
-## Solution
-The solution uses a stack data structure to keep track of opening brackets. The key insights are:
-1. We only need to store opening brackets in the stack
-2. When we see a closing bracket, it must match the most recent opening bracket
-3. We can use a dictionary to map closing brackets to their corresponding opening brackets
+### Approach 2 (Counting)
+- Time Complexity: O(n)
+  - We process each character once
+- Space Complexity: O(1)
+  - We only use a single counter
+
+### Approach 3 (Regex)
+- Time Complexity: O(n²) in worst case
+  - Each regex operation can take O(n) time
+  - We may need to perform O(n) operations
+- Space Complexity: O(n)
+  - We need to store the modified string
 
 ## Key Points
-- The order of brackets matters
-- Each closing bracket must match its most recent opening bracket
-- The stack helps us maintain the order of brackets
+- This is a classic stack-based problem
+- The stack approach is the most general and efficient
 - We need to handle edge cases (empty string, single bracket)
-- The solution is efficient with O(n) time and space complexity
-
-## Solution Approaches
-
-### 1. Stack-based Solution (O(n))
-- Use a stack to track opening brackets
-- When encountering a closing bracket, check if it matches the top of stack
-- Time Complexity: O(n)
-- Space Complexity: O(n)
-- Best for performance and clarity
-
-### 2. String Replacement Solution (O(n^2))
-- Repeatedly remove valid pairs until string is empty
-- Time Complexity: O(n^2)
-- Space Complexity: O(1)
-- Best for understanding the problem
-
-## Time Complexity
-- Stack: O(n)
-- Replace: O(n^2)
-
-## Space Complexity
-- Stack: O(n)
-- Replace: O(1)
-
-## Usage
-```python
-from valid_parentheses import Solution
-
-solution = Solution()
-
-# Using stack-based solution
-print(solution.is_valid_stack("()"))  # Output: True
-print(solution.is_valid_stack("(]"))  # Output: False
-
-# Using replacement solution
-print(solution.is_valid_replace("({[]})"))  # Output: True
-print(solution.is_valid_replace("([)]"))    # Output: False
-```
+- The order of brackets matters
+- We can extend the solution to generate all valid combinations
+- The counting approach is simpler but limited
+- The regex approach is elegant but inefficient
 
 ## Common Applications
-- Syntax checking in compilers
-- XML/HTML validation
-- Code editor bracket matching
-- Mathematical expression validation
-- Configuration file validation 
+- Code editors and IDEs
+- Compiler design
+- XML/HTML parsing
+- JSON validation
+- Mathematical expressions
+- Configuration files
+- Markup languages
+
+## Example Walkthrough
+For s = "([)]":
+
+### Stack-based Approach:
+1. Process '(':
+   - Stack: ['(']
+2. Process '[':
+   - Stack: ['(', '[']
+3. Process ')':
+   - Top of stack is '[', doesn't match ')'
+   - Return false
+
+### Counting Approach (for single type):
+1. Process '(':
+   - Count: 1
+2. Process ')':
+   - Count: 0
+3. Process '(':
+   - Count: 1
+4. Process ')':
+   - Count: 0
+5. Result: true (but incorrect for mixed types)
+
+### Regex Approach:
+1. Initial string: "([)]"
+2. No valid pairs found
+3. Result: false
+
+## Generating All Valid Combinations
+To generate all valid parentheses combinations for n pairs:
+1. Use backtracking to build combinations
+2. Keep track of open and close counts
+3. Add opening bracket if open < n
+4. Add closing bracket if close < open
+5. Add to result when length = 2n
+
+## Optimization Tips
+1. Use early termination if possible
+2. Pre-allocate stack space if size is known
+3. Use bit manipulation for single type
+4. Implement pruning in backtracking
+5. Cache frequently used patterns
+6. Use string builder for concatenation
+7. Consider using a fixed-size array for stack 
